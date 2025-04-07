@@ -15,7 +15,12 @@ else:
 df = pd.read_csv(file_path)
 
 # 4️⃣ Clean and format
-df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
+if 'Date' not in df.columns:
+    st.error("❌ Your file is missing a required column: 'Date'")
+    st.stop()
+else:
+    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
+
 df = df.dropna(subset=['Date'])
 
 for col in ['Temp', 'Brix', 'pH']:
