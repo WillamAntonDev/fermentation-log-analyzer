@@ -1,52 +1,76 @@
 # 🍇 Fermentation Log Analyzer
 
-Track, analyze, and visualize your wine fermentation data with this simple, interactive Streamlit app. Built by a winemaker turned developer, this tool helps you catch stuck fermentations, spot high temps, and make smarter decisions based on real-time metrics.
+[![Streamlit App](https://img.shields.io/badge/Live_App-Streamlit-brightgreen?logo=streamlit)](https://fermentation-log-analyzer-eeajwtajgbzevolp7urnmo.streamlit.app/)
+
+Track, analyze, and visualize your wine fermentation data — all in one clean, interactive dashboard.
+
+This app was built by a winemaker-turned-software-developer to make fermentation logs *actually useful*. Upload your CSV, pick a lot, and get insights on temperature, Brix, pH trends, stuck fermentations, and more.
+
+---
 
 ## 🔍 Features
 
-- Upload your CSV log and get instant analysis
-- Detect potential stuck fermentations (flat Brix)
-- Flag dangerously high fermentation temperatures (>35°C)
-- View summary statistics for Temp, Brix, and pH
-- Download analysis reports
-- Interactive line charts for each variable
+- 📂 Upload your own CSV fermentation logs
+- 🍷 Select a specific wine lot to analyze
+- 📊 View clean, sortable summary stats for Temp, Brix, and pH
+- 📅 See the fermentation date range for each lot
+- 📉 Detect potential stuck fermentations (flat Brix over time)
+- 📈 Interactive line plots for each variable
+- 💾 Download a per-lot summary CSV for your records
+- 💻 Deployed live on Streamlit Cloud
 
-## 📊 Sample Log Format
+---
 
-Your CSV should have these exact columns:
+## 🚀 Try It Live
 
-| Date       | Temp | Brix | pH  |
-|------------|------|------|-----|
-| 2025-04-01 | 24.5 | 21.5 | 3.4 |
-| 2025-04-02 | 25.2 | 20.8 | 3.38 |
+👉 **[Launch the Fermentation Log Analyzer](https://fermentation-log-analyzer-eeajwtajgbzevolp7urnmo.streamlit.app/)** 
+No installation needed. Just upload your `.csv` and explore.
 
-> ✅ **Tip**: A sample CSV is included in this repo.
+---
 
-## 🚀 How to Use
+## 📋 CSV Format (Required Columns)
 
-### Run Locally
+Your fermentation log should look like this:
 
-1. Clone the repo  
-   `git clone https://github.com/WillamAntonDev/fermentation-log-analyzer.git
-2. Install dependencies  
-   `pip install -r requirements.txt`
-3. Start the app  
-   `streamlit run dashboard.py`
+| Date       | Lot                     | Temp | Brix | pH  |
+|------------|--------------------------|------|------|-----|
+| 2025-04-01 | 24-CS-Napa-Beckstoffer  | 24.5 | 21.2 | 3.42 |
+| 2025-04-02 | 24-CS-Napa-Beckstoffer  | 25.1 | 20.5 | 3.40 |
+| 2025-04-01 | 24-PN-Willamette        | 22.0 | 23.1 | 3.50 |
 
-### Use Online (via Streamlit Cloud)
+- `Date` must be in a recognizable date format
+- `Lot` is used to filter and group fermentations
+- `Temp`, `Brix`, and `pH` must be numeric
 
-➡️ [Launch the app here](https://fermentation-app.streamlit.app) *(Link goes here once deployed)*
+---
 
 ## 🧠 Built With
 
 - Python
 - pandas
 - Streamlit
-- matplotlib + seaborn
+- seaborn + matplotlib
+- Real-life winery headaches
 
-## 🧑‍💻 About the Creator
+---
 
-William Anton is a former winemaker and manufacturing specialist turned software developer, focused on building tools that solve real-world problems through code and data.
+## 👤 About the Creator
 
-> *“I built the tool I wish I had back in the cellar.”*
+**William Anton**  
+Former winemaker turned software engineer.  
+Now building tools that combine domain expertise with clean code and practical design.
 
+📍 [LinkedIn](https://www.linkedin.com/in/willantonvino/)  
+💻 [GitHub](https://github.com/willamantondev)
+
+> _“I built the tool I wish I had back in the cellar.”_
+
+---
+
+## 🛠 Local Dev Instructions (Optional)
+
+```bash
+git clone https://github.com/WillamAntonDev/fermentation-log-analyzer.git
+cd fermentation-log-analyzer
+pip install -r requirements.txt
+streamlit run dashboard.py

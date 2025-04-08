@@ -32,6 +32,13 @@ if uploaded_file:
     # 🍷 Select the wine lot
     selected_lot = st.selectbox("Select a wine lot to analyze", sorted(df['lot'].unique()))
     lot_df = df[df['lot'] == selected_lot]
+    
+    st.markdown(f"### 📌 Analyzing Lot: `{selected_lot}`")
+
+    first_date = lot_df['date'].min().strftime('%Y-%m-%d')
+    last_date = lot_df['date'].max().strftime('%Y-%m-%d')
+    st.markdown(f"📅 Date Range: `{first_date}` to `{last_date}`")
+
 
     # 📊 Summary Statistics
     st.subheader(f"📊 Summary Stats for {selected_lot}")
