@@ -2,3 +2,6 @@ venv/
 __pycache__/
 *.pyc
 outputs/
+fermentation-creds.json
+fermentation-creds.json
+fermentation-creds.json
