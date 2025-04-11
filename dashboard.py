@@ -8,6 +8,7 @@ import os
 import gspread
 from google.oauth2.service_account import Credentials
 
+
 # 📡 Load data from Google Sheets
 def load_sheet():
     scope = [
@@ -18,32 +19,18 @@ def load_sheet():
     sheet_key = st.secrets["sheet_key"]
     creds = Credentials.from_service_account_file(creds_path, scopes=scope)
     client = gspread.authorize(creds)
-    st.success("✅ Google Sheets API authorized.")
 
     try:
-        st.write("🔑 Opening spreadsheet...")
-        sheet = client.open_by_key(sheet_key)
-        st.write("✅ Spreadsheet opened.")
-        sheet1 = sheet.worksheet("Sheet1")
-        st.write("📄 Worksheet found:", sheet1.title)
-        data = sheet1.get_all_records()
-        st.write("🧪 First 3 rows:", data[:3])
+        sheet = client.open_by_key(sheet_key).worksheet("Sheet1")
+        data = sheet.get_all_records()
         return pd.DataFrame(data)
-
     except Exception as e:
-        st.error(f"❌ Failed to open spreadsheet: {e}")
+        st.error(f"❌ Failed to load Google Sheet: {e}")
         raise
+
 
 # 🎯 Page Title
 st.title("🍇 Fermentation Log Analyzer")
-
-# 🧪 Load fermentation data
-try:
-    df = load_sheet()
-    st.write("✅ DataFrame loaded:", df.head())
-except Exception as e:
-    st.error(f"❌ Failed to load sheet: {e}")
-    st.stop()
 
 # 📥 Sample File Download
 sample_file_path = "data/sample_fermentation_log.csv"
@@ -53,11 +40,30 @@ if os.path.exists(sample_file_path):
         href = f'<a href="data:file/csv;base64,{b64}" download="sample_fermentation_log.csv">📥 Download Sample Fermentation Log</a>'
         st.markdown(href, unsafe_allow_html=True)
 
+# 📤 Choose Data Source
+source = st.radio("📤 Choose Data Source", ["Google Sheets", "Manual CSV Upload"])
+df = None
+
+if source == "Google Sheets":
+    try:
+        df = load_sheet()
+        st.success("✅ Google Sheet loaded successfully.")
+    except Exception:
+        st.stop()
+else:
+    uploaded_file = st.file_uploader("Upload your fermentation CSV", type=["csv"])
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
+        st.success("✅ CSV file loaded.")
+    else:
+        st.warning("📭 Please upload a CSV file.")
+        st.stop()
+
 # 🧹 Normalize and clean
 df.columns = df.columns.str.strip().str.lower()
 required_columns = {'date', 'time', 'lot', 'temp', 'brix', 'ph'}
 if not required_columns.issubset(df.columns):
-    st.error("❌ Sheet is missing one or more required columns: Date, Time, Lot, Temp, Brix, pH")
+    st.error("❌ Missing required columns: Date, Time, Lot, Temp, Brix, pH")
     st.stop()
 
 df['date'] = pd.to_datetime(df['date'], errors='coerce')
@@ -76,10 +82,10 @@ df['brix_drop_flag'] = df['brix_drop'] < -BRIX_DROP_THRESHOLD
 st.subheader("📉 Rapid Brix Drop Check")
 flagged = df[df['brix_drop_flag']]
 if not flagged.empty:
-    st.warning("⚠️ Warning: Sudden Brix drops greater than 8.0 detected!")
+    st.warning("⚠️ Sudden Brix drops > 8.0 detected!")
     st.dataframe(flagged[['datetime', 'lot', 'brix', 'brix_drop']])
 else:
-    st.success("✅ No Brix drops over 8.0 detected.")
+    st.success("✅ No large Brix drops detected.")
 
 # 🍷 Lot selector
 lot_options = ["All Lots"] + sorted(df['lot'].unique())
